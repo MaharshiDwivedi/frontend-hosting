@@ -13,3 +13,4 @@ yarn-error.log*
 # OS-related files (Mac aur Windows ke temporary files)
 .DS_Store
 Thumbs.db
+.vercel

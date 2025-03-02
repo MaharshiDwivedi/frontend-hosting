@@ -3,9 +3,14 @@ import { Plus, X, Camera, Upload, CalendarPlus } from "lucide-react";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+
 import Tharav from "./Tharav";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+
 
 const Meetings = () => {
+
+  const navigate = useNavigate(); // Use the navigate function
   const [isOpen, setIsOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedMembers, setSelectedMembers] = useState([]);
@@ -57,7 +62,7 @@ const Meetings = () => {
 
   const fetchCommitteeMembers = async () => {
     try {
-      const response = await fetch("https://backend-hosting-2ncv.onrender.com/api/member");
+      const response = await fetch("http://localhost:5000/api/member");
       const data = await response.json();
       const filteredMembers = data.map((item) => {
         const recordData = item.member_record
@@ -78,7 +83,7 @@ const Meetings = () => {
 
   const fetchMeetings = async () => {
     try {
-      const response = await axios.get("https://backend-hosting-2ncv.onrender.com/api/meeting");
+      const response = await axios.get("http://localhost:5000/api/meeting");
       const meetingsData = response.data.map((meeting) => ({
         id: meeting.meeting_id,
         date: meeting.meeting_date,
@@ -114,7 +119,7 @@ if (meeting.image_url) {
     setPhoto(meeting.image_url); // Use as-is if it's already a full URL
   } else {
     // Construct URL for images in the uploads folder
-    setPhoto(`https://backend-hosting-2ncv.onrender.com/uploads/${meeting.image_url}`);
+    setPhoto(`http://localhost:5000/uploads/${meeting.image_url}`);
   }
 } else {
   setPhoto(null);
@@ -325,14 +330,14 @@ if (meeting.image_url) {
       if (isEditing) {
         // Update existing meeting
         response = await axios.put(
-          `https://backend-hosting-2ncv.onrender.com/api/meeting/${editingMeetingId}`,
+          `http://localhost:5000/api/meeting/${editingMeetingId}`,
           formData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
       } else {
         // Create new meeting
         response = await axios.post(
-          "https://backend-hosting-2ncv.onrender.com/api/meeting",
+          "http://localhost:5000/api/meeting",
           formData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
@@ -372,7 +377,7 @@ if (meeting.image_url) {
     if (window.confirm("Are you sure you want to delete this meeting?")) {
       try {
         const response = await axios.delete(
-          `https://backend-hosting-2ncv.onrender.com/api/meeting/${meetingId}`
+          `http://localhost:5000/api/meeting/${meetingId}`
         );
         console.log("Backend response:", response.data);
 
@@ -624,8 +629,7 @@ if (meeting.image_url) {
             key={meeting.no || index}
             className="relative flex items-center justify-between bg-white rounded-[20px] border-2 border-blue-950 p-2 cursor-pointer hover:shadow-md transition-shadow mb-9 w-2xl"
             onClick={() => {
-              window.location.href = `/home/meeting/Tharav`;
-            }}
+              navigate(`/home/meetings/tharav/${index}`);            }}
           >
             <div className="flex items-center space-x-[90px]">
               <div className="text-lg font-semibold text-white bg-blue-950 rounded-[10px] pl-3 pr-3 absolute mb-[80px]">
